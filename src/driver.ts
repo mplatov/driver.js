@@ -60,7 +60,18 @@ export function driver(options: Config = {}): Driver {
     }
 
     if (overlayClickBehavior === "nextStep") {
-      moveNext();
+      const step = getState().activeStep!;
+      const onNextClick = step?.popover?.onNextClick || getConfig("onNextClick");
+      if (onNextClick){
+        return onNextClick(undefined, step, {
+          config: getConfig(),
+          state: getState(),
+          driver: getCurrentDriver(),
+        });
+      }
+      else {
+        moveNext();
+      }
     }
   }
 
